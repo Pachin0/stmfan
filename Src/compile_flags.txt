@@ -1,0 +1,10 @@
+-I 
+../Inc 
+-I 
+../../../../../../Drivers/CMSIS/Core/Include/ 
+-I 
+../../../../../../Drivers/STM32F0xx_HAL_Driver/Inc/ 
+-I 
+../../../../../../Drivers/CMSIS/Device/ST/STM32F0xx/Include/ 
+-I 
+../../../../../../Drivers/BSP/STM32F0xx_Nucleo_32/ 
