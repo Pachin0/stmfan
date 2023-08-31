@@ -29,6 +29,7 @@ uint8_t errorMessage[] = "\n\rError Found\n\r";
 uint8_t bufferCOBS[64] = {0}; // This is stupid, malloc should be done instead
 uint8_t newline[] = "\n\r"; 
 
+
 uint8_t Cflag = 0x7E;
 uint8_t Ccode = 0x7D;
 
@@ -91,6 +92,7 @@ size_t unCobs (void* stuff, uint8_t* buffer, size_t s) {
   return (writePos - buffer);
 };
 
+// Incomplete. Receives on the serial line until there is a start of the packet, then starts reading the whole packet until the end. This is for COBS. To be used later
 void getPacket(UART_HandleTypeDef* art, uint8_t* buffer) {
   uint8_t byte[10] = {0};
   do {
@@ -100,6 +102,7 @@ void getPacket(UART_HandleTypeDef* art, uint8_t* buffer) {
 }
 
 
+// Stop fails in a visible way. Blinks the LED to signal demise.
 void fuck(int sec) {
   LED3_GPIO_CLK_ENABLE();
   GPIO_InitTypeDef led;
@@ -115,20 +118,7 @@ void fuck(int sec) {
   }
 };
 
-// Sends the error code over through serial
-void shit(uint8_t* err) {
-  UART_HandleTypeDef art;
-  uartPins();
-  initUart(&art);
-  __HAL_UART_ENABLE(&art);
-  while(1) {
-    HAL_Delay(700);
-    sendData(errorMessage,sizeof(errorMessage), &art);
-  }
-}
-
-
-// send in chunks of max 16 bytes
+// send in chunks of max 16 bytes until the end of the string. Used for text only and a in house replacement for printLn
 void printLn(UART_HandleTypeDef* uart, char* message){
   int length = strlen(message);
   char* p = message;
@@ -217,7 +207,7 @@ void SystemClock_Config(void)
 {
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_OscInitTypeDef RCC_OscInitStruct;
-  
+
   /* No HSE Oscillator on Nucleo, Activate PLL with HSI/2 as source */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_NONE;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -242,6 +232,12 @@ void SystemClock_Config(void)
   }
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+  TIM1->CCR1 = bufferCOBS[0];
+  printLn(huart, "Received callback");
+  HAL_UART_Receive_IT(huart, &bufferCOBS[0], 1);
+}
+
 int main () {
   int32_t CH1_DC = 0;
   uint8_t xbuffer[64];
@@ -259,28 +255,10 @@ int main () {
   initUart(&art);
   __HAL_UART_ENABLE(&art);
 
-  while(1) { 
-
-
-
-   
   HAL_TIM_PWM_Start(&tim, TIM_CHANNEL_1);
-//  while(1) {
-//       while(CH1_DC < 255)
-//        {
-//            TIM1->CCR1 = CH1_DC;
-//            CH1_DC += 1;
-//            HAL_Delay(100);
-//        }
-//        while(CH1_DC > 0)
-//        {
-//            TIM1->CCR1 = CH1_DC;
-//            CH1_DC -= 1;
-//            HAL_Delay(100);
-//        }
-//    }
+  HAL_UART_Receive_IT(&art, &bufferCOBS[0], 1);
+  while(1) { 
+    HAL_Delay(100);
+  }
 
-
-
-};
-
+}
