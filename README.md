@@ -4,6 +4,13 @@ Havent pushed the code yet! Stop looking.
 
 Hello, this is a basic STM32 based pwm controller for fans of a linux pc. I chose a STM32 due to being cheap and very powerful, but most importantly it is programmable with nothing but free software tools. On the market there does not seem to be PWM controllers that expose a hwmon interface for linux, and so I decided to make my own. This fancontroller uses timers provided in the STM32 to make a standard 21Khz signal that is PWM from 0 to 255. The controller communicates through serial comm and at this moment it is very basic. This is a work in progress. 
 
+# How to use
+At this moment there is 1 pwm output from pin 9 (PA9) on the stm32f031k6, the pin is a pullup. Also UART1 pins are the ones that listen to the serial connection. The folder "computer" has the code that reads the temperature and sends it over serial. If you wanted to use it, you have to change the path of the hwmon inteface in computer/main.c to your computer's location. Also, if you have other usb serial ports connected, also change the serial port path. Currently hardcoded it to ttyUSB0
+
+# build
+Clone the [stmf0 HAL Library](https://github.com/STMicroelectronics/STM32CubeF0/)
+
+
 
 ## Things to do
  - Implement COBS encoding in our serial comm protocol to packetize the data we exchange. Packets will allow us to control more fans and even use the controller to report various temperatures that could be hooked up to analog read pins.
