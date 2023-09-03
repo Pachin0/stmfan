@@ -7,8 +7,14 @@ Hello, this is a basic STM32 based pwm controller for fans of a linux pc. I chos
 # How to use
 At this moment there is 1 pwm output from pin 9 (PA9) on the stm32f031k6, the pin is a pullup. Also UART1 pins are the ones that listen to the serial connection. The folder "computer" has the code that reads the temperature and sends it over serial. If you wanted to use it, you have to change the path of the hwmon inteface in computer/main.c to your computer's location. Also, if you have other usb serial ports connected, also change the serial port path. Currently hardcoded it to ttyUSB0
 
+## Pinout of the STM board
+
+![STM32F031K6-Nucleo Pinout](https://os.mbed.com/media/uploads/bcostm/nucleo32_revc_f031k6_mbed_pinout_v2.png)
+
+
+
 # build
-Clone the [stm HAL Library](https://github.com/STMicroelectronics/STM32CubeF0/). Then navigate into ~/STM32CubeF0/Projects/STM32F031K6-Nucleo/Examples/GPIO and clone this repo there. To build and flash the stm dev board just run the compile.sh script inside of Src
+Clone the [stm HAL Library](https://github.com/STMicroelectronics/STM32CubeF0/). Then navigate into STM32CubeF0/Projects/STM32F031K6-Nucleo/Examples/GPIO and clone this repo there. To build and flash the stm dev board just run the compile.sh script inside of Src
 
 Also have your arm-none-eabi-gcc ready with the rmprofile 
 
