@@ -2,6 +2,7 @@
 #include "Legacy/stm32_hal_legacy.h"
 #include "stm32f031x6.h"
 #include "stm32f0xx_hal.h"
+#include "stm32f0xx_hal_cortex.h"
 #include "stm32f0xx_hal_def.h"
 #include "stm32f0xx_hal_tim.h"
 #include "stm32f0xx_hal_gpio.h"
@@ -29,6 +30,7 @@ uint8_t errorMessage[] = "\n\rError Found\n\r";
 uint8_t bufferCOBS[64] = {0}; // This is stupid, malloc should be done instead
 uint8_t newline[] = "\n\r"; 
 
+UART_HandleTypeDef thing = {0}; 
 
 uint8_t Cflag = 0x7E;
 uint8_t Ccode = 0x7D;
@@ -145,6 +147,7 @@ void initUart(UART_HandleTypeDef* uart) {
   if (HAL_UART_Init(uart) != HAL_OK)
     fuck(5000);
 
+
 };
 
 
@@ -232,11 +235,13 @@ void SystemClock_Config(void)
   }
 }
 
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-  TIM1->CCR1 = bufferCOBS[0];
-  printLn(huart, "Received callback");
+  //TIM1->CCR1 = bufferCOBS[0];
+  printLn(&thing, "Received callback");
   HAL_UART_Receive_IT(huart, &bufferCOBS[0], 1);
 }
+
 
 int main () {
   int32_t CH1_DC = 0;
@@ -246,19 +251,23 @@ int main () {
   SystemClock_Config();
   initializeTIMLL();
   // Init Done here
+  HAL_NVIC_SetPriority(USART1_IRQn, 0, 1);
+  HAL_NVIC_EnableIRQ(USART1_IRQn);
 
   TIM_HandleTypeDef tim = {0};
   timInit(&tim);
 
   uartPins();
-  UART_HandleTypeDef art = {0};
-  initUart(&art);
-  __HAL_UART_ENABLE(&art);
+  initUart(&thing);
+  __HAL_UART_ENABLE(&thing);
 
   HAL_TIM_PWM_Start(&tim, TIM_CHANNEL_1);
-  HAL_UART_Receive_IT(&art, &bufferCOBS[0], 1);
+  HAL_UART_Receive_IT(&thing, bufferCOBS, 1);
   while(1) { 
-    HAL_Delay(100);
+    //HAL_Delay(100);
+    //TIM1->CCR1 = 0;
+    //TIM1->CCR1 = 255;
+    fuck(100);
   }
 
 }

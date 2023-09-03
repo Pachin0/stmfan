@@ -21,7 +21,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+//#include "stm32f0xx_hal_uart.h"
 #include "stm32f0xx_it.h"
+extern UART_HandleTypeDef thing;
 
 /** @addtogroup STM32F0xx_HAL_Examples
   * @{
@@ -102,14 +104,15 @@ void SysTick_Handler(void)
 /*  file (startup_stm32f0xx.s).                                               */
 /******************************************************************************/
 
+void USART1_IRQHandler(void)
+{
+  HAL_UART_IRQHandler(&thing);
+}
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None
   * @retval None
   */
-/*void PPP_IRQHandler(void)
-{
-}*/
 
 
 /**

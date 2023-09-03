@@ -5,12 +5,14 @@ arm-none-eabi-gcc main.c \
   startup_stm32f031x6.s \
   -fno-common -ffunction-sections -fdata-sections \
   ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_uart.c \
+  ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_uart_ex.c \
   ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal.c \
   ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c \
   ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_cortex.c \
   ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_gpio.c \
   ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim.c \
   ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_tim_ex.c \
+  ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_dma.c \
   -I ../Inc \
   -I ../../../../../../Drivers/CMSIS/Core/Include/ \
   -I ../../../../../../Drivers/STM32F0xx_HAL_Driver/Inc/ \
@@ -21,3 +23,4 @@ arm-none-eabi-gcc main.c \
   -Os -o sus.bin -Wl,--gc-sections \
 
   openocd -f ../flash/openocd.cfg -c "program ../Src/sus.bin verify reset exit"
+  # ../../../../../../Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_uart.c \
